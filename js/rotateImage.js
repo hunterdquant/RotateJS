@@ -10,6 +10,7 @@ var arrayOfTexCoords;
 var indexList;
 // Rotation values x, y, z
 var theta;
+var thetaLoc;
 var textureImage;
 var image;
 
@@ -65,6 +66,8 @@ function init() {
   gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(texCoordLocation);
 
+  thetaLoc = gl.getUniformLocation(shaderProgram, "theta");
+
   render();
 }
 
@@ -83,18 +86,9 @@ function render() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   var vertexCount = indexList.length;
 
-  var matrixRotZ = [Math.cos(theta), -Math.sin(theta), 0, 0, Math.sin(theta), Math.cos(theta), 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
-  var matrixRotY = [Math.cos(theta), 0, -Math.sin(theta), 0, 0, 1, 0, 0, Math.sin(theta), 0, Math.cos(theta), 0, 0, 0, 0, 1];
-  var matrixRotX = [1, 0, 0, 0, 0, Math.cos(theta), -Math.sin(theta), 0, 0, Math.sin(theta), Math.cos(theta), 0, 0, 0, 0, 1];
-
   theta += 0.015;
 
-  var matrixRotXLoc = gl.getUniformLocation(shaderProgram, "MRotX");
-  gl.uniformMatrix4fv(matrixRotXLoc, false, matrixRotX);
-  var matrixRotYLoc = gl.getUniformLocation(shaderProgram, "MRotY");
-  gl.uniformMatrix4fv(matrixRotYLoc, false, matrixRotY);
-  var matrixRotZLoc = gl.getUniformLocation(shaderProgram, "MRotZ");
-  gl.uniformMatrix4fv(matrixRotZLoc, false, matrixRotZ);
+  gl.uniform1f(thetaLoc, theta);
 
   gl.drawElements( gl.TRIANGLES, 36, gl.UNSIGNED_BYTE, 0);
   requestAnimFrame(render);
