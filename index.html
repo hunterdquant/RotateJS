@@ -18,9 +18,11 @@
 
       mat4 RotX, RotY, RotZ;
       void main() {
-        RotZ = mat4(cos(theta), -sin(theta), 0.0, 0.0, sin(theta), cos(theta), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-        RotY = mat4(cos(theta), 0.0, -sin(theta), 0.0, 0.0, 1.0, 0.0, 0.0, sin(theta), 0.0, cos(theta), 0.0, 0.0, 0.0, 0.0, 1.0);
-        RotX = mat4(1.0, 0.0, 0.0, 0.0, 0.0, cos(theta), -sin(theta), 0.0, 0.0, sin(theta), cos(theta), 0.0, 0.0, 0.0, 0.0, 1.0);
+        float c = cos(theta);
+        float s = sin(theta);
+        RotZ = mat4(c, -s, 0.0, 0.0, s, c, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+        RotY = mat4(c, 0.0, -s, 0.0, 0.0, 1.0, 0.0, 0.0, s, 0.0, c, 0.0, 0.0, 0.0, 0.0, 1.0);
+        RotX = mat4(1.0, 0.0, 0.0, 0.0, 0.0, c, -s, 0.0, 0.0, s, c, 0.0, 0.0, 0.0, 0.0, 1.0);
 
         fTexCoord = texCoord;
         gl_Position = RotZ * RotY * RotX * vec4(vertexPosition, 1.0);
