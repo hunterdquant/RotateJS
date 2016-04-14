@@ -2,11 +2,10 @@
 A simple WebGL program that textures a cube and rotates it.
 
 # Usage
-Include the scripts that are in index.html<br/>
-Create a canvas with id "gl-canvas"<br/>
-Set your canvas dimensions<br/>
-Create a image/video element with id "rotateIt"<br/>
-Have fun.<br/>
+Create a canvas with id "gl-canvas"
+Set your canvas dimensions
+Create a image/video element with id "rotateIt"
+Have fun.
 
 # Note
 Because of browser security settings, you may need to run this in a webserver to access textures.
