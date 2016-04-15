@@ -41,8 +41,8 @@ function init() {
   textureImage = gl.createTexture();
   gl.bindTexture(gl.TEXTURE_2D, textureImage);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
@@ -66,29 +66,30 @@ function init() {
   gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
   gl.enableVertexAttribArray(texCoordLocation);
 
-  thetaLoc = gl.getUniformLocation(shaderProgram, "theta");
+  rotXLoc = gl.getUniformLocation(shaderProgram, "RotX");
+  rotYLoc = gl.getUniformLocation(shaderProgram, "RotY");
+  rotZLoc = gl.getUniformLocation(shaderProgram, "RotZ");
 
   render();
 }
 
 /* Draws buffer contents to the screen and calculates vertex transformations. */
 function render() {
-  // gl.activeTexture(gl.TEXTURE0);
-  // gl.bindTexture(gl.TEXTURE_2D, textureImage);
-  // gl.uniform1i(gl.getUniformLocation(shaderProgram, "texMap"), 0);
-  textureImage = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, textureImage);
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   var vertexCount = indexList.length;
 
   theta += 0.015;
 
-  gl.uniform1f(thetaLoc, theta);
+  var c = Math.cos(theta);
+  var s = Math.sin(theta);
+  var RotZ = [c, -s, 0.0, 0.0, s, c, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0];
+  var RotY = [c, 0.0, -s, 0.0, 0.0, 1.0, 0.0, 0.0, s, 0.0, c, 0.0, 0.0, 0.0, 0.0, 1.0];
+  var RotX = [1.0, 0.0, 0.0, 0.0, 0.0, c, -s, 0.0, 0.0, s, c, 0.0, 0.0, 0.0, 0.0, 1.0];
+
+  gl.uniformMatrix4fv(rotXLoc, false, RotX);
+  gl.uniformMatrix4fv(rotYLoc, false, RotY);
+  gl.uniformMatrix4fv(rotZLoc, false, RotZ);
 
   gl.drawElements( gl.TRIANGLES, 36, gl.UNSIGNED_BYTE, 0);
   requestAnimFrame(render);
