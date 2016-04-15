@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script type="text/javascript" src="js/Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="js/Common/initShaders.js"></script>
+    <script type="text/javascript" src="js/Common/MV.js"></script>
+    <script type="text/javascript" src="js/rotateImage.js"></script>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+      precision mediump float;
+      attribute vec3 vertexPosition;
+      attribute vec2 texCoord;
+      uniform float theta;
+      varying highp vec2 fTexCoord;
+      mat4 RotX, RotY, RotZ;
+      void main() {
+
+        float c = cos(theta);
+        float s = sin(theta);
+        RotZ = mat4(c, -s, 0.0, 0.0, s, c, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+        RotY = mat4(c, 0.0, -s, 0.0, 0.0, 1.0, 0.0, 0.0, s, 0.0, c, 0.0, 0.0, 0.0, 0.0, 1.0);
+        RotX = mat4(1.0, 0.0, 0.0, 0.0, 0.0, c, -s, 0.0, 0.0, s, c, 0.0, 0.0, 0.0, 0.0, 1.0);
+
+        fTexCoord = texCoord;
+        gl_Position = RotZ * RotY * RotX * vec4(vertexPosition, 1.0);
+        gl_PointSize = 1.0;
+      }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+      precision mediump float;
+      uniform sampler2D texMap;
+      varying highp vec2 fTexCoord;
+      void main() {
+        vec4 color = texture2D(texMap, vec2(fTexCoord.s, fTexCoord.t));
+        gl_FragColor.r = color.r;
+        gl_FragColor.g = color.g;
+        gl_FragColor.b = color.b;
+        gl_FragColor.a = color.a;
+      }
+    </script>
+  </head>
+  <body onload="init()" style="margin: 0; background-color: black">
+  <video id="rotateIt" loop src="media/Opening1-OnePunchMan.webm" autoplay fullscreen style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 0; height: 100%; width: 100;  margin: auto auto">
+  </video>
+  <canvas id="gl-canvas" width="900" height="900" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;display: block; width:900; margin: auto auto; z-index: 1"></canvas>
+  </body>
+</html>
